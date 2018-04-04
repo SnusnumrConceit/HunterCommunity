@@ -72,8 +72,8 @@ $(document).ready(function () {
             try {
                 if (comment !== null && comment !== undefined && comment.length != 0) {
                     if (comment.length <= 1000) {
-                        if (/([а-яА-Я0-9,.!?:\- ])+/.exec(comment) !== null) {
-                            if (/([а-яА-Я0-9,.!?:\- ])+/.exec(comment)[0] === comment){
+                        if (/([а-яёА-ЯЁ0-9,.!?:\- ])+/.exec(comment) !== null) {
+                            if (/([а-яёА-ЯЁ0-9,.!?:\- ])+/.exec(comment)[0] === comment){
                                 commentForm.addClass('is-valid');
                                 return true;
                             } else {

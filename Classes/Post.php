@@ -6,28 +6,99 @@ class Post implements IPost{
     protected $message;
 
     public function Create($post)
-    {
-        # code...
+    {   
+        require_once 'DbConnect.php';
+        $db = DbConnect();
+        if ($this->CheckDublicates($post, $db, 'create')) {
+            $createPostQuery = $db->prepare('INSERT INTO posts VALUES (?, ?, ?, ?)');
+            $createPostQuery->execute(array($post->id, $post->message, $post->login, $post->date));
+        }
     }
 
     public function Update($post)
     {
-        # code...
+        require_once 'DbConnect.php';
+        $db = DbConnect();
+        if ($this->CheckDublicates($post, $db, 'UPDATE')) {
+            $createPostQuery = $db->prepare('UPDATE posts SET Message = ? Login = ?, Date = ? WHERE id = ?)');
+            $createPostQuery->execute(array($post->message, $post->login, $post->date, $post->id));
+        }
     }
 
     public function Delete($id)
     {
-        # code...
+        require_once 'DbConnect.php';
+        $db = DbConnect();
+        $deletePostQuery = $db->prepare('DELETE FROM posts WHERE id = ?');
+        $deletePostQuery->execute(array($id));
     }
 
     public function Get($id)
     {
-        # code...
+        require_once 'DbConnect.php';
+        $db = DbConnect();
+        $getPostQuery = $db->prepare('SELECT * FROM vposts WHERE id = ?');
+        $getPostQuery->execute(array($id));
+        $post = $getPostQuery->fetchAll(PDO::FETCH_OBJ);
+        if (count($post) == 1) {
+            return $post;
+        } else {
+            echo('Отзыв не найден');
+        }
+        
     }
 
     public function Find($login)
     {
-        # code...
+        require_once 'DbConnect.php';
+        $db = DbConnect();
+        $findPostsQuery = $db->prepare('SELECT * FROM vposts WHERE Login = ?');
+        $findPostsQuery->execute(array($login));
+        $findPosts = $findPostsQuery->fetchAll(PDO::FETCH_OBJ);
+        if (count($findPosts) != 0) {
+            return $findPosts;
+        } else {
+            return false;
+        }
+    }
+
+    protected function CheckDublicates($post, $db, $switch)
+    {
+        if ($switch === "create") {
+            $dubclicateQuery = $db->prepare('SELECT * FROM vposts WHERE Login = ? AND Message = ?');
+            $dubclicateQuery->execute(array($post->login, $post->message));
+            $currentPost = $dubclicateQuery->fetchAll(PDO::FETCH_OBJ);
+            if (!$currentPost) {
+                return true;
+            } else {
+                echo('Такой отзыв уже существует!');
+            }
+            
+        } else if ($switch === "UPDATE"){
+            $dubclicateQuery = $db->prepare('SELECT * FROM vposts WHERE Login = ? AND Message = ?');
+            $dubclicateQuery->execute(array($post->login, $post->message));
+            $currentPost = $dubclicateQuery->fetchAll(PDO::FETCH_OBJ);
+            if (count($currentPost) == 0 || count($currentPost) == 1) {
+                return true;
+            } else {
+                echo('Такой отзыв уже существует!');
+            }
+        }
+        
+    }
+
+    function Show()
+    {
+        require_once 'DbConnect.php';
+        $db = DbConnect();
+        $selectPostsQuery = $db->prepare('SELECT * FROM vposts');
+        $selectPostsQuery->execute();
+        $posts = $selectPostsQuery->fetchAll(PDO::FETCH_OBJ);
+        if ($posts) {
+            return $posts;
+        } else {
+            echo('Вы не создали ни одного отзыва!');
+        }
     }
 
     public function Validate($post)
@@ -80,19 +151,18 @@ class Post implements IPost{
 
         function ValidateComment($comment)
         {
-            var_dump($comment);
             try {
                 if ($comment ?? '') {
                     $commentLength = mb_strlen($comment);
                     if ($commentLength > 0 && $commentLength <= 1000) {
                         if (trim($comment) === $comment && htmlspecialchars($comment) === $comment) {
-                            if (preg_match('/([а-яА-Я0-9,.!?:\- ])+/u', $comment, $regComment)) {
+                            if (preg_match('/([а-ёяА-ЯЁ0-9,.!?:\- ])+/u', $comment, $regComment)) {
                                 if ($regComment ?? '') {
                                     if ($regComment[0] == $comment) {
                                         return true;
                                     }
                                 } else {
-                                    throw new Exception('Wrong Login Error', 1);
+                                    throw new Exception('Wrong Comment Error', 1);
                                 }
                             } else {
                                 throw new Exception("Wrong Comment Error", 1);
@@ -140,16 +210,6 @@ class Post implements IPost{
         $this->message = $post->comment;
         $this->date = date('j-F-y H:i');
         return $this;
-    }
-
-    protected function CheckDublicates($post, $db, $switch)
-    {
-        # code...
-    }
-
-    function Show()
-    {
-        # code...
     }
 }
 

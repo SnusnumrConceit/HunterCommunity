@@ -2,12 +2,12 @@
     function DbConnect()
     {
         try {
-            $con = new PDO('mysql:host=localhost;charset=utf8;dbname=hunter;', 'root', '');
+            $con = new PDO('mysql:host=localhost;charset=utf8;dbname=huntercommunity;', 'root', '');
             $con->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch (PDOException $e) {
             echo("Невозможно выполнить подключение к базе данных! ".$e->getMessage());
         }
-        return $db;
+        return $con;
     }
 
 ?>
