@@ -22,8 +22,13 @@ class House implements IHouse{
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($house, $db, 'UPDATE')) {
-            $createHouseQuery = $db->prepare('CALL spUpdateHouse(?, ?, ?, ?, ?, ?)');
-            $createHouseQuery->execute(array($house->title, $house->photo, $house->count, $house->places, $house->price, $house->id));
+            if ($house->photo ?? '') {
+                $updateHouseQuery = $db->prepare('CALL spUpdateHouse(?, ?, ?, ?, ?, ?)');
+                $updateHouseQuery->execute(array($house->title, $house->photo, $house->count, $house->places, $house->price, $house->id));
+            } else {
+                $updateHouseQuery = $db->prepare('CALL spUpdateHouseMinPhoto (?, ?, ?, ?, ?)');
+                $updateHouseQuery->execute(array($house->title, $house->count, $house->places, $house->price, $house->id));
+            }
         }
     }
 
@@ -78,7 +83,7 @@ class House implements IHouse{
             
         } else if ($switch === "UPDATE"){
             $dubclicateQuery = $db->prepare('CALL spGetHouseTitle (?)');
-            $dubclicateQuery->execute(array($house->title, $house->message));
+            $dubclicateQuery->execute(array($house->title));
             $currentHouse = $dubclicateQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentHouse) == 0 || count($currentHouse) == 1) {
                 return true;
@@ -115,7 +120,11 @@ class House implements IHouse{
     {
         $this->id = uniqid();
         $this->title = $house->title;
-        $this->photo = base64_encode(file_get_contents($photo['tmp_name']));
+        if ($photo ?? '') {
+            $this->photo = base64_encode(file_get_contents($photo['tmp_name']));
+        } else {
+            $this->photo = $photo;
+        }
         $this->count = $house->count;
         $this->places = $house->places;
         $this->price = $house->price;
@@ -164,6 +173,12 @@ class House implements IHouse{
     protected function ValidatePhoto($photo)
     {
         try {
+            
+            if (substr($_SERVER['HTTP_REFERER'], -33, 9) === 'houseinfo') {
+                if (!($post ?? '')) {
+                    return true;
+                }
+            }
             if (is_uploaded_file($photo['tmp_name'])) {
                 if ($photo['size'] <= 2*1024*1024) {
                     $ext = substr($photo['name'], -3, 3);

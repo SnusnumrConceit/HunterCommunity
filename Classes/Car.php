@@ -21,8 +21,15 @@ class Car implements ICar{
         require_once 'DbConnect.php';
         $db = DbConnect();
         if ($this->CheckDublicates($car, $db, 'UPDATE')) {
-            $createCarQuery = $db->prepare('CALL spUpdateCar(?, ?, ?, ?, ?, ?)');
-            $createCarQuery->execute(array($car->title, $car->photo, $car->count, $car->price, $car->id));
+            if ($car->photo ?? '') {
+                $updateCarQuery = $db->prepare('CALL spUpdateCarWithPhoto (?, ?, ?, ?, ?)');
+                $updateCarQuery->execute(array($car->title, $car->photo, $car->count, $car->price, $car->id));
+            } else {
+                $updateCarQuery = $db->prepare('CALL spUpdateCar (?, ?, ?, ?)');
+                $updateCarQuery->execute(array($car->title, $car->count, $car->price, $car->id));
+            }
+            
+            
         }
     }
 
@@ -30,7 +37,7 @@ class Car implements ICar{
     {
         require_once 'DbConnect.php';
         $db = DbConnect();
-        $deleteCarQuery = $db->prepare('CALL spDeleteCar(?)');
+        $deleteCarQuery = $db->prepare('CALL spDeleteCar (?)');
         $deleteCarQuery->execute(array($id));
     }
 
@@ -77,7 +84,7 @@ class Car implements ICar{
             
         } else if ($switch === "UPDATE"){
             $dubclicateQuery = $db->prepare('CALL spGetCarTitle (?)');
-            $dubclicateQuery->execute(array($car->title, $car->message));
+            $dubclicateQuery->execute(array($car->title));
             $currentCar = $dubclicateQuery->fetchAll(PDO::FETCH_OBJ);
             if (count($currentCar) == 0 || count($currentCar) == 1) {
                 return true;
@@ -110,11 +117,15 @@ class Car implements ICar{
         }
     }
 
-    public function Set($car, $photo)
+    public function Set($car, $photo = null)
     {
         $this->id = uniqid();
         $this->title = $car->title;
-        $this->photo = base64_encode(file_get_contents($photo['tmp_name']));
+        if ($photo ?? '') {
+            $this->photo = base64_encode(file_get_contents($photo['tmp_name']));
+        } else {
+            $this->photo = $photo;
+        }
         $this->count = $car->count;
         $this->price = $car->price;
         return $this;
@@ -162,6 +173,11 @@ class Car implements ICar{
     protected function ValidatePhoto($photo)
     {
         try {
+            if (substr($_SERVER['HTTP_REFERER'], -29, 7) === 'carinfo') {
+                if (!($photo ?? '')) {
+                    return true;
+                }
+            }
             if (is_uploaded_file($photo['tmp_name'])) {
                 if ($photo['size'] <= 2*1024*1024) {
                     $ext = substr($photo['name'], -3, 3);
