@@ -73,7 +73,7 @@
                 if ($house->Validate($new_house, $photo)) {
                     $photo = '';
                     $house = $house->Set($new_house, $photo);
-                    $house = $house->Update($new_house);
+                    $house = $house->Update($house);
                 }
             }
         }

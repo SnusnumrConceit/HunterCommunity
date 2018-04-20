@@ -68,7 +68,7 @@
                 $photo = '';
                 if ($car->Validate($new_car, $photo)) {
                     $car = $car->Set($new_car);
-                    $car = $car->Update($new_car);
+                    $car = $car->Update($car);
                 }
                 
             }

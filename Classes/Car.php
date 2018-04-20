@@ -119,7 +119,11 @@ class Car implements ICar{
 
     public function Set($car, $photo = null)
     {
-        $this->id = uniqid();
+        if ($car->id ?? '') {
+            $this->id = $car->id;
+        } else {
+            $this->id = uniqid();
+        }
         $this->title = $car->title;
         if ($photo ?? '') {
             $this->photo = base64_encode(file_get_contents($photo['tmp_name']));

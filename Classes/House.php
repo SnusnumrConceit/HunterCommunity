@@ -118,7 +118,11 @@ class House implements IHouse{
 
     public function Set($house, $photo)
     {
-        $this->id = uniqid();
+        if ($house->id ?? '') {
+            $this->id = $house->id;
+        } else {
+            $this->id = uniqid();
+        }
         $this->title = $house->title;
         if ($photo ?? '') {
             $this->photo = base64_encode(file_get_contents($photo['tmp_name']));
