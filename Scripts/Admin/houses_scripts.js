@@ -58,7 +58,7 @@ $(document).ready(function () {
             } catch (error) {
                 if (error.message == 'Empty Find Error') {
                     findForm.addClass('is-invalid');
-                    findForm.prop('placeholder', 'Вы не ввели логин');
+                    findForm.prop('placeholder', 'Вы не ввели название');
                 }
                 else {
                     alert(error.message);
@@ -112,7 +112,7 @@ $(document).ready(function () {
             if (title !== null && title !== undefined && title.length != 0) {
                 if (title.length >= 4 && title.length <=50) {
                     if (/([А-ЯЁ][а-яё ])+/.exec(title) !== null) {
-                        console.log(/([А-ЯЁ][а-яё ]+)/.exec(title)[0]);
+                        //console.log(/([А-ЯЁ][а-яё ]+)/.exec(title)[0]);
                         if (/([А-ЯЁ][а-яё ]+)/.exec(title)[0] == title) {
                             return true;
                         } else {
