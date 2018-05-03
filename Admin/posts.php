@@ -18,7 +18,7 @@ print <<<POST
         <div class="container">
             <div class="functional-container row">
                 <button class="btn btn-success col-1" id="btn-open-container">Добавить</button>
-                <button class="btn btn-secondary offset-sm-1" id="btn-open-container">На главную</button>
+                <a class="btn btn-secondary offset-sm-1" href='admin.php'>На главную</a>
                 <form method="GET" class="form-inline col" id="find-input">
                     <div class="form group offset-sm-4">
                         <input type="text" class="form-control" placeholder="Введите логин">
@@ -95,7 +95,7 @@ print <<<POST
         <div class="container">
             <div class="functional-container row">
                 <button class="btn btn-success col-1" id="btn-open-container">Добавить</button>
-                <button class="btn btn-secondary offset-sm-1" id="btn-open-container">На главную</button>
+                <a class="btn btn-secondary offset-sm-1" href='admin.php'>На главную</a>
                 <form method="GET" class="form-inline col">
                     <div class="form group offset-sm-4">
                         <input type="text" class="form-control" placeholder="Введите логин" id="find-input">

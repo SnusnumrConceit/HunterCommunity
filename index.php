@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="Styles/index.css">
     </head>
     <body>
         <div class="container-fluid">
@@ -16,11 +17,11 @@
 
             
 
-             <!-- <?php require_once 'View/Layout/footer.php'; ?>  -->
+             <?php require_once 'View/Layout/footer.php'; ?>
 
         
         </div>
-        <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+        <script src='https://yastatic.net/jquery/3.1.1/jquery.min.js'></script>
         <script src="Scripts/Index/tabs_scripts.js"></script>
     </body>
 </html>

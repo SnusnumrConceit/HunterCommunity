@@ -1,0 +1,15 @@
+section a {
+    display: block;
+    height: 120px;
+    width:120px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+section {
+    margin: 20px;
+}
+
+.row {
+    margin-top: 200px;
+}

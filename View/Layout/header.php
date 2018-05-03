@@ -1,5 +1,5 @@
-<header>
-    <nav class="navbar navbar-expand-sm bg-light row">
+<header class='row'>
+    <nav class="navbar navbar-expand-sm">
         <ul class="navbar-nav">
             <li class="nav-item text-sm-center col-3">
                 <a href="general.php" class="nav-link active">Главная</a>

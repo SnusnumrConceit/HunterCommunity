@@ -1,0 +1,29 @@
+header, footer {
+    color:#fff;
+    background-color: #006600;
+}
+
+.nav-link {
+    color:#fff;
+}
+
+.nav-link:hover {
+    color: yellow;
+}
+
+.active {
+    color:yellow;
+}
+
+footer {
+    height: 56px;
+}
+
+#main {
+    min-height: 85.2vh;
+    margin-top: 20px;
+}
+
+.card {
+    margin-bottom:20px;
+}

@@ -14,6 +14,7 @@ echo('<!DOCTYPE html>
         <div class="row">
             <div class="col">
                 <button type="button" class="btn btn-success" id="btn-open-container">Добавить</button>
+                <a class="btn btn-secondary offset-sm-1" href="admin.php">На главную</a>
             </div>
         </div>
         <div class="creator-container row">
